@@ -1,6 +1,10 @@
 body, html { margin: 0px; padding: 0px; }
 path { stroke: white; stroke-width: 0.25px; fill: lightsteelblue; opacity:0.6; }
 
+canvas {
+  background: #fff;
+}
+
 /*path:hover { fill: green; }*/
 
 div.tooltip { position: absolute; text-align: center; width: auto; height: auto; padding: 5px;

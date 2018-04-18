@@ -98,11 +98,24 @@ var geomaniac = (function(){
 			c.restore();
 
 			// sea //003366'
-			c.fillStyle = '#003366', c.beginPath(), path.context(c)(globe), c.fill(), c.stroke();
+			c.fillStyle = '#f3f0ec';
+			c.beginPath();
+			path.context(c)(globe);
+			c.fill();
+			c.stroke();
+
 			//graticule
-			c.strokeStyle = "#333", c.lineWidth = .5, c.beginPath(), path.context(c)(graticule()), c.stroke();
+			c.strokeStyle = "rgba(0,0,0,0)";
+			c.lineWidth = .5;
+			c.beginPath();
+			path.context(c)(graticule());
+			c.stroke();
+			
 			// land
-			c.fillStyle = "#006699", c.beginPath(), path.context(c)(land) /*path(land)*/, c.fill();
+			c.fillStyle = "#70cbf4";
+			c.beginPath();
+			path.context(c)(land); /*path(land)*/
+			c.fill();
 			// countries
 
 			// mobile
@@ -110,7 +123,11 @@ var geomaniac = (function(){
 				c.fillStyle = "#f00", c.beginPath(), path(countries[i]), c.fill();
 			}*/
 			// borders
-			c.strokeStyle = "rgba(225, 215, 255, 0.4)", c.lineWidth = 1, c.beginPath(), path(borders), c.stroke();
+			c.strokeStyle = "rgba(225, 215, 255, 0.4)";
+			c.lineWidth = 1;
+			c.beginPath();
+			path(borders);
+			c.stroke();
 
 			var protate = projection.rotate(),
 				mouseCoords = projection.invert([mousepos.x, mousepos.y]),
@@ -137,14 +154,14 @@ var geomaniac = (function(){
 				if ((startLongitude < endLongitude && longitude > startLongitude && longitude < endLongitude) ||
 						(startLongitude > endLongitude && (longitude > startLongitude || longitude < endLongitude))){
 							// labels
-							c.font = '8px Monospace';
-							c.fillStyle = "#fb0", c.beginPath(), c.fillText(decodeURI(cities[i].properties.city).toUpperCase(), xyFromCoordinates[0], xyFromCoordinates[1]);
+						//	c.font = '8px Monospace';
+						//	c.fillStyle = "#fb0", c.beginPath(), c.fillText(decodeURI(cities[i].properties.city).toUpperCase(), xyFromCoordinates[0], xyFromCoordinates[1]);
 							// white outline
-							c.fillStyle = 'rgba(144, 122, 122, 0.2)', c.beginPath(), c.fillRect(xyFromCoordinates[0] -1, xyFromCoordinates[1] -6, (decodeURI(cities[i].properties.city).toUpperCase().length * 5), 7);
+						//	c.fillStyle = 'rgba(144, 122, 122, 0.2)', c.beginPath(), c.fillRect(xyFromCoordinates[0] -1, xyFromCoordinates[1] -6, (decodeURI(cities[i].properties.city).toUpperCase().length * 5), 7);
 				} else {
-					c.font = '5px Monospace';
-					c.fillStyle = "rgba(32, 45, 21, 0.2)", c.beginPath(), c.fillText(decodeURI(cities[i].properties.city).toUpperCase(), xyFromCoordinates[0], xyFromCoordinates[1]);
-					c.fillStyle = 'rgba(255, 255, 255, 0.0)', c.beginPath(), c.fillRect(xyFromCoordinates[0] -1, xyFromCoordinates[1] -6, (decodeURI(cities[i].properties.city).toUpperCase().length * 5), 7);
+				//	c.font = '5px Monospace';
+				//	c.fillStyle = "rgba(32, 45, 21, 0.2)", c.beginPath(), c.fillText(decodeURI(cities[i].properties.city).toUpperCase(), xyFromCoordinates[0], xyFromCoordinates[1]);
+				//	c.fillStyle = 'rgba(255, 255, 255, 0.0)', c.beginPath(), c.fillRect(xyFromCoordinates[0] -1, xyFromCoordinates[1] -6, (decodeURI(cities[i].properties.city).toUpperCase().length * 5), 7);
 				}
 			}
 			
@@ -272,7 +289,7 @@ var geomaniac = (function(){
 			if (barRotation[0] >= 180) barRotation[0] -= 360;
 
 			projection.rotate(rotation);
-			barProjection.rotate(barRotation);
+			//barProjection.rotate(barRotation);
 
 			moved = true;
 			dragging = true;
@@ -458,13 +475,20 @@ var geomaniac = (function(){
 			if(country && country.name){
 				if(lastCountryName != country.name){
 
-					c.fillStyle = "rgba(198, 237, 219, 0.4)", c.beginPath(), path(country.geometry), c.fill();
+					c.fillStyle = "rgba(198, 237, 219, 0.4)";
+					c.beginPath();
+					path(country.geometry);
+					c.fill();
+
+					// country text (background)
+					// c.fillStyle = 'rgba(0,0,0,0.5)';
+					// c.beginPath();
+					// c.fillRect(x -1, y -10, ((decodeURI(country.name)).toUpperCase().length * 7.5), 12);
 
 					// country text
-					c.fillStyle = 'rgba(244, 244, 244, 0.8)', c.beginPath(), c.fillRect(x -1, y -10, ((decodeURI(country.name)).toUpperCase().length * 7.5), 12);
-
-					c.font = '12px Monospace';
-					c.fillStyle = "#000", c.beginPath(), c.fillText((decodeURI(country.name)).toUpperCase(), x, y);
+					c.font = '12px Arial';
+					c.fillStyle = "#000", c.beginPath();
+					c.fillText((decodeURI(country.name)).toUpperCase(), x, y);
 
 					lastCountryName = country.name;
 					lastCountryGeometry = country.geometry;
@@ -572,28 +596,30 @@ window.addEventListener('load', function(){
 	});
 
 	prefix = helpers.prefixMatch(["webkit", "ms", "Moz", "O"]);
+	
+	geomaniac.orthographic();
 
-	helpers.loadScript(location.href + 'socket.io/socket.io.js', 'text/javascript', function(){
+	// helpers.loadScript(location.href + 'socket.io/socket.io.js', 'text/javascript', function(){
 
-		// uncomment for testing
-		/*geomaniac.orthographic();
-        return;*/
+	// 	// uncomment for testing
+	// 	/*geomaniac.orthographic();
+ //        return;*/
 
-		var iointerval = setInterval(function(){
-			if(typeof io != 'undefined'){
-				clearInterval(iointerval);
-				sockety.load();
-				geomaniac.orthographic();
-				console.log('io ready.');
-			}
-		}, 50);
+	// 	var iointerval = setInterval(function(){
+	// 		if(typeof io != 'undefined'){
+	// 			clearInterval(iointerval);
+	// 			sockety.load();
+	// 			geomaniac.orthographic();
+	// 			console.log('io ready.');
+	// 		}
+	// 	}, 50);
 
-		var connecting = document.createElement('div');
-		connecting.className = 'totalstatustip connecting';
-		connecting.innerHTML = 'Connecting stream ...';
-		connecting.style.cssText = 'position: absolute; right: 100; bottom: 50;'
+	// 	var connecting = document.createElement('div');
+	// 	connecting.className = 'totalstatustip connecting';
+	// 	connecting.innerHTML = 'Connecting stream ...';
+	// 	connecting.style.cssText = 'position: absolute; right: 100; bottom: 50;'
 
-		document.body.appendChild(connecting);
-	});
+	// 	document.body.appendChild(connecting);
+	// });
 });
 
